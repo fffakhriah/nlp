@@ -26,12 +26,15 @@ def index():
     prob_ai = 0.0
     confidence_msg = None
 
-    if request.method == "POST":
-        text = request.form.get("text", "").strip()
+    # 👉 TAMBAH: simpan input text
+    input_text = ""
 
-        if text:
+    if request.method == "POST":
+        input_text = request.form.get("text", "").strip()
+
+        if input_text:
             # Transform input text using TF-IDF
-            text_vector = vectorizer.transform([text])
+            text_vector = vectorizer.transform([input_text])
 
             # Predict probabilities
             probabilities = model.predict_proba(text_vector)[0]
@@ -40,8 +43,6 @@ def index():
             # Human = 0, AI = 1
             prob_human = round(probabilities[0] * 100, 2)
             prob_ai = round(probabilities[1] * 100, 2)
-
-    
 
             if prob_ai >= 60:
                 prediction = "AI-Generated"
@@ -57,12 +58,14 @@ def index():
         else:
             prediction = "No text entered."
 
+    # 👉 TAMBAH input_text dalam render_template
     return render_template(
         "index.html",
         prediction=prediction,
         prob_human=prob_human,
         prob_ai=prob_ai,
-        confidence_msg=confidence_msg
+        confidence_msg=confidence_msg,
+        input_text=input_text
     )
 
 # ===============================
