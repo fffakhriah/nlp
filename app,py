@@ -1,0 +1,24 @@
+import streamlit as st
+import joblib
+
+# Load model
+model = joblib.load("model/lr_model.pkl")
+tfidf = joblib.load("model/tfidf.pkl")
+le = joblib.load("model/label_encoder.pkl")
+
+st.set_page_config(page_title="AI Text Detector", layout="centered")
+
+st.title("AI-Generated Text Detection")
+st.write("This application detects whether a given text is AI-generated or human-written.")
+
+text_input = st.text_area("Enter text here:")
+
+if st.button("Predict"):
+    if text_input.strip() == "":
+        st.warning("Please enter some text.")
+    else:
+        vector = tfidf.transform([text_input.lower()])
+        prediction = model.predict(vector)
+        label = le.inverse_transform(prediction)[0]
+
+        st.success(f"Prediction: **{label}**")
