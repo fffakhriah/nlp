@@ -41,9 +41,16 @@ def index():
             prob_human = round(probabilities[0] * 100, 2)
             prob_ai = round(probabilities[1] * 100, 2)
 
-            prediction = "AI-Generated" if prob_ai > prob_human else "Human-Written"
+    
 
-            # Confidence warning (optional but good for demo)
+            if prob_ai >= 60:
+                prediction = "AI-Generated"
+            elif prob_human >= 60:
+                prediction = "Human-Written"
+            else:
+                prediction = "Uncertain (Low Confidence)"
+
+            # Confidence warning 
             if abs(prob_ai - prob_human) < 10:
                 confidence_msg = "⚠️ Prediction confidence is low."
 
