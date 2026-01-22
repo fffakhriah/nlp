@@ -36,7 +36,7 @@ def index():
             # Predict probabilities
             probabilities = model.predict_proba(text_vector)[0]
 
-            # Label mapping (CONSISTENT WITH REPORT)
+            # Label mapping 
             # Human = 0, AI = 1
             prob_human = round(probabilities[0] * 100, 2)
             prob_ai = round(probabilities[1] * 100, 2)
