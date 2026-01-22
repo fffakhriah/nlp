@@ -2,38 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Text Detector 🤖</title>
+    <title>AI-Generated Text Detector</title>
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; color: #333; }
-        h1 { text-align: center; margin-bottom: 30px; }
-        form { text-align: center; margin-bottom: 40px; }
-        input[type=text] { width: 60%; padding: 12px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
-        button { padding: 12px 25px; font-size: 16px; border-radius: 5px; border: none; background-color: #2196F3; color: white; cursor: pointer; }
-        button:hover { background-color: #1976D2; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 40px;
+            color: #333;
+        }
 
-        .result { width: 60%; margin: auto; text-align: center; }
-        .prediction { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-        .bar-container { width: 100%; height: 30px; background-color: #ddd; border-radius: 5px; overflow: hidden; display: flex; }
-        .bar-human { background-color: #2196F3; width: {{ prob_human }}%; line-height: 30px; color: white; text-align: left; padding-left: 5px; }
-        .bar-ai { background-color: #4CAF50; width: {{ prob_ai }}%; line-height: 30px; color: white; text-align: right; padding-right: 5px; }
+        form {
+            text-align: center;
+        }
+
+        textarea {
+            width: 65%;
+            height: 140px;
+            padding: 12px;
+            font-size: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 25px;
+            font-size: 15px;
+            border-radius: 5px;
+            border: none;
+            background-color: #1976D2;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1259a5;
+        }
+
+        .result {
+            width: 65%;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .prediction {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .confidence {
+            font-size: 14px;
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+
+        .bar-container {
+            display: flex;
+            height: 28px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .bar-human {
+            background-color: #2196F3;
+            color: white;
+            text-align: left;
+            padding-left: 6px;
+            line-height: 28px;
+        }
+
+        .bar-ai {
+            background-color: #4CAF50;
+            color: white;
+            text-align: right;
+            padding-right: 6px;
+            line-height: 28px;
+        }
     </style>
 </head>
-<body>
-    <h1>AI Text Detector 🤖</h1>
-    <form method="POST">
-        <input type="text" name="text" placeholder="Paste your text here...">
-        <button type="submit">Detect 🔍</button>
-    </form>
 
-    {% if prediction %}
-    <div class="result">
-        <div class="prediction">Prediction: {{ prediction }}</div>
-        <div class="bar-container">
-            <div class="bar-human">{{ prob_human }}%</div>
-            <div class="bar-ai">{{ prob_ai }}%</div>
+<body>
+
+<h1>AI-Generated Text Detector</h1>
+
+<form method="POST">
+    <textarea name="text" placeholder="Paste your text here..."></textarea><br>
+    <button type="submit">Detect</button>
+</form>
+
+{% if prediction %}
+<div class="result">
+    <div class="prediction">Prediction: {{ prediction }}</div>
+
+    {% if confidence_msg %}
+        <div class="confidence">{{ confidence_msg }}</div>
+    {% endif %}
+
+    <div class="bar-container">
+        <div class="bar-human" style="width: {{ prob_human }}%;">
+            Human {{ prob_human }}%
+        </div>
+        <div class="bar-ai" style="width: {{ prob_ai }}%;">
+            AI {{ prob_ai }}%
         </div>
     </div>
-    {% endif %}
+</div>
+{% endif %}
+
 </body>
 </html>
