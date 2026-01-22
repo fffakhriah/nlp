@@ -17,12 +17,12 @@ else:
 @app.route("/", methods=["GET", "POST"])
 def index():
     prediction = None
-    prob_human = None
-    prob_ai = None
+    prob_human = 0
+    prob_ai = 0
 
     if request.method == "POST":
         text = request.form.get("text", "")
-        if text.strip() != "":
+        if text.strip():
             text_vector = vectorizer.transform([text])
             prob = model.predict_proba(text_vector)[0]
             prob_human = round(prob[0]*100, 2)
@@ -30,8 +30,6 @@ def index():
             prediction = "AI-Generated" if prob_ai > prob_human else "Human-Written"
         else:
             prediction = "No text entered"
-            prob_human = 0
-            prob_ai = 0
 
     return render_template(
         "index.html",
