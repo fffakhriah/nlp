@@ -11,30 +11,21 @@ le = pickle.load(open("model/label_encoder.pkl", "rb"))
 st.set_page_config(page_title="AI Text Detector", layout="centered")
 
 st.title("🧠 AI vs Human Text Detection")
-st.write(
-    "This application detects whether a given text is **AI-generated** "
-    "or **Human-written** using TF-IDF and Logistic Regression."
-)
+st.write("Detect whether a text is AI-generated or human-written.")
 
 user_text = st.text_area("Enter text:", height=200)
 
 if st.button("Detect"):
     if user_text.strip() == "":
-        st.warning("Please enter some text.")
+        st.warning("Please enter text.")
     else:
-        cleaned_text = preprocess_text(user_text)
+        cleaned = preprocess_text(user_text)
+        vectorized = tfidf.transform([cleaned])
+        pred = model.predict(vectorized)[0]
+        prob = model.predict_proba(vectorized)[0]
 
-        if len(cleaned_text.split()) < 5:
-            st.warning("Text too short for reliable prediction.")
-        else:
-            vector = tfidf.transform([cleaned_text])
-            prediction = model.predict(vector)[0]
-            probability = model.predict_proba(vector)[0]
+        label = le.inverse_transform([pred])[0]
+        confidence = np.max(prob)
 
-            label = le.inverse_transform([prediction])[0]
-            confidence = np.max(probability)
-
-            st.subheader("🔍 Prediction Result")
-            st.success(f"Prediction: {label}")
-            st.info(f"Confidence Score: {confidence:.2f}")
-            st.progress(confidence)
+        st.success(f"Prediction: {label}")
+        st.info(f"Confidence: {confidence:.2f}")
