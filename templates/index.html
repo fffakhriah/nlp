@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <title>AI Text Detector 🤖</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 50px; }
-        input[type=text] { width: 80%; padding: 10px; }
-        button { padding: 10px 20px; font-size: 16px; }
-        .result { margin-top: 20px; }
-        .bar-container { width: 80%; background-color: #ddd; height: 25px; border-radius: 5px; margin-top: 10px; }
-        .bar { height: 100%; text-align: center; line-height: 25px; color: white; border-radius: 5px; }
-        .ai-bar { background-color: #4CAF50; }
-        .human-bar { background-color: #2196F3; margin-bottom: 5px; }
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        form { text-align: center; margin-bottom: 40px; }
+        input[type=text] { width: 60%; padding: 12px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 12px 25px; font-size: 16px; border-radius: 5px; border: none; background-color: #2196F3; color: white; cursor: pointer; }
+        button:hover { background-color: #1976D2; }
+
+        .result { width: 60%; margin: auto; text-align: center; }
+        .prediction { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+
+        .bar-container { width: 100%; height: 30px; background-color: #ddd; border-radius: 5px; overflow: hidden; display: flex; }
+        .bar-human { background-color: #2196F3; width: {{ prob_human }}%; line-height: 30px; color: white; text-align: left; padding-left: 5px; }
+        .bar-ai { background-color: #4CAF50; width: {{ prob_ai }}%; line-height: 30px; color: white; text-align: right; padding-right: 5px; }
     </style>
 </head>
 <body>
@@ -23,14 +28,10 @@
 
     {% if prediction %}
     <div class="result">
-        <h2>Prediction: {{ prediction }}</h2>
-
+        <div class="prediction">Prediction: {{ prediction }}</div>
         <div class="bar-container">
-            <div class="bar human-bar" style="width: {{ prob_human }}%;">Human: {{ prob_human }}%</div>
-        </div>
-
-        <div class="bar-container">
-            <div class="bar ai-bar" style="width: {{ prob_ai }}%;">AI: {{ prob_ai }}%</div>
+            <div class="bar-human">{{ prob_human }}%</div>
+            <div class="bar-ai">{{ prob_ai }}%</div>
         </div>
     </div>
     {% endif %}
