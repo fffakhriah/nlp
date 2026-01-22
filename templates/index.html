@@ -1,20 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AI Text Detector Dashboard</title>
+    <title>🤖 AI vs Human Text Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 500px;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 25px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 30px;
+            width: 500px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        .bar-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .bar {
+            width: 48%;
+            height: 25px;
+            border-radius: 5px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .human {
+            background-color: #2196F3;
+        }
+
+        .ai {
+            background-color: #f44336;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>AI-Generated Text Detector</h1>
+    <h1>🤖 AI vs Human Text Detector 📝</h1>
 
     <form method="POST">
-        <textarea name="text" rows="8" cols="60"
-        placeholder="Paste text here..."></textarea><br><br>
-        <button type="submit">Detect</button>
+        <textarea name="text" placeholder="Paste text here..."></textarea><br>
+        <button type="submit">Detect 🔍</button>
     </form>
 
     {% if prediction %}
-        <h3>Result: {{ prediction }}</h3>
+    <div class="result">
+        <h2>Result: {{ prediction }}</h2>
+        <div class="bar-container">
+            <div class="bar human" style="width: {{ 100-confidence if prediction=='AI-Generated' else confidence }}%">
+                Human
+            </div>
+            <div class="bar ai" style="width: {{ confidence if prediction=='AI-Generated' else 100-confidence }}%">
+                AI
+            </div>
+        </div>
         <p>Confidence: {{ confidence }}%</p>
+    </div>
     {% endif %}
 </body>
 </html>
