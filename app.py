@@ -1,31 +1,36 @@
-import streamlit as st
-import pickle
-import numpy as np
-from utils.preprocessing import preprocess_text
+from flask import Flask, render_template, request
+import joblib
+import os
 
-# Load model
-tfidf = pickle.load(open("model/tfidf_vectorizer.pkl", "rb"))
-model = pickle.load(open("model/logistic_model.pkl", "rb"))
-le = pickle.load(open("model/label_encoder.pkl", "rb"))
+app = Flask(__name__)
 
-st.set_page_config(page_title="AI Text Detector", layout="centered")
+# Load model and vectorizer
+MODEL_PATH = "ai_text_detector.pkl"
+VECTORIZER_PATH = "tfidf_vectorizer.pkl"
 
-st.title("🧠 AI vs Human Text Detection")
-st.write("Detect whether a text is AI-generated or human-written.")
+if os.path.exists(MODEL_PATH) and os.path.exists(VECTORIZER_PATH):
+    model = joblib.load(MODEL_PATH)
+    vectorizer = joblib.load(VECTORIZER_PATH)
+else:
+    raise FileNotFoundError("Model or vectorizer not found. Make sure .pkl files are in the folder.")
 
-user_text = st.text_area("Enter text:", height=200)
+@app.route("/", methods=["GET", "POST"])
+def index():
+    prediction = None
+    confidence = None
 
-if st.button("Detect"):
-    if user_text.strip() == "":
-        st.warning("Please enter text.")
-    else:
-        cleaned = preprocess_text(user_text)
-        vectorized = tfidf.transform([cleaned])
-        pred = model.predict(vectorized)[0]
-        prob = model.predict_proba(vectorized)[0]
+    if request.method == "POST":
+        text = request.form.get("text", "")
+        if text.strip() != "":
+            text_vector = vectorizer.transform([text])
+            prob = model.predict_proba(text_vector)[0]
+            prediction = "AI-Generated" if prob[1] > 0.5 else "Human-Written"
+            confidence = round(max(prob) * 100, 2)
+        else:
+            prediction = "No text entered"
+            confidence = 0
 
-        label = le.inverse_transform([pred])[0]
-        confidence = np.max(prob)
+    return render_template("index.html", prediction=prediction, confidence=confidence)
 
-        st.success(f"Prediction: {label}")
-        st.info(f"Confidence: {confidence:.2f}")
+if __name__ == "__main__":
+    app.run(debug=True)
