@@ -8,13 +8,24 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f6f8;
-            margin: 40px;
+            margin: 0;
+            padding: 0;
             color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         h1 {
             text-align: center;
             margin-bottom: 30px;
+            color: #1976D2;
         }
 
         form {
@@ -22,19 +33,20 @@
         }
 
         textarea {
-            width: 65%;
-            height: 140px;
-            padding: 12px;
+            width: 90%;
+            height: 160px;
+            padding: 14px;
             font-size: 15px;
-            border-radius: 5px;
+            border-radius: 6px;
             border: 1px solid #ccc;
+            resize: vertical;
         }
 
         button {
-            margin-top: 15px;
-            padding: 10px 25px;
+            margin-top: 18px;
+            padding: 12px 30px;
             font-size: 15px;
-            border-radius: 5px;
+            border-radius: 6px;
             border: none;
             background-color: #1976D2;
             color: white;
@@ -46,76 +58,94 @@
         }
 
         .result {
-            width: 65%;
-            margin: 40px auto;
+            margin-top: 40px;
             text-align: center;
         }
 
         .prediction {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .confidence {
             font-size: 14px;
             color: #d32f2f;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .bar-container {
             display: flex;
-            height: 28px;
+            height: 30px;
             background-color: #ddd;
-            border-radius: 5px;
+            border-radius: 6px;
             overflow: hidden;
+            margin-top: 15px;
         }
 
         .bar-human {
             background-color: #2196F3;
             color: white;
             text-align: left;
-            padding-left: 6px;
-            line-height: 28px;
+            padding-left: 8px;
+            line-height: 30px;
+            font-size: 14px;
         }
 
         .bar-ai {
             background-color: #4CAF50;
             color: white;
             text-align: right;
-            padding-right: 6px;
-            line-height: 28px;
+            padding-right: 8px;
+            line-height: 30px;
+            font-size: 14px;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 30px;
         }
     </style>
 </head>
 
 <body>
 
-<h1>AI-Generated Text Detector</h1>
+<div class="container">
 
-<form method="POST">
-    <textarea name="text" placeholder="Paste your text here..."></textarea><br>
-    <button type="submit">Detect</button>
-</form>
+    <h1>AI-Generated Text Detector</h1>
 
-{% if prediction %}
-<div class="result">
-    <div class="prediction">Prediction: {{ prediction }}</div>
+    <form method="POST">
+        <!-- 🔴 INPUT TEXT KEKAL DI SINI -->
+        <textarea name="text" placeholder="Paste your text here...">{{ input_text }}</textarea><br>
+        <button type="submit">Detect</button>
+    </form>
 
-    {% if confidence_msg %}
-        <div class="confidence">{{ confidence_msg }}</div>
-    {% endif %}
+    {% if prediction %}
+    <div class="result">
+        <div class="prediction">Prediction: {{ prediction }}</div>
 
-    <div class="bar-container">
-        <div class="bar-human" style="width: {{ prob_human }}%;">
-            Human {{ prob_human }}%
-        </div>
-        <div class="bar-ai" style="width: {{ prob_ai }}%;">
-            AI {{ prob_ai }}%
+        {% if confidence_msg %}
+            <div class="confidence">{{ confidence_msg }}</div>
+        {% endif %}
+
+        <div class="bar-container">
+            <div class="bar-human" style="width: {{ prob_human }}%;">
+                Human {{ prob_human }}%
+            </div>
+            <div class="bar-ai" style="width: {{ prob_ai }}%;">
+                AI {{ prob_ai }}%
+            </div>
         </div>
     </div>
+    {% endif %}
+
+    <div class="footer-note">
+        NLP-based AI Text Detection System
+    </div>
+
 </div>
-{% endif %}
 
 </body>
 </html>
