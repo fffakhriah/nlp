@@ -1,106 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>🤖 AI vs Human Text Detector</title>
+    <meta charset="UTF-8">
+    <title>AI Text Detector 🤖</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 50px;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        textarea {
-            width: 500px;
-            height: 150px;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            resize: none;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 10px 25px;
-            font-size: 18px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .result {
-            margin-top: 30px;
-            width: 500px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
-
-        .bar-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-
-        .bar {
-            width: 48%;
-            height: 25px;
-            border-radius: 5px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .human {
-            background-color: #2196F3;
-        }
-
-        .ai {
-            background-color: #f44336;
-        }
-
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        input[type=text] { width: 80%; padding: 10px; }
+        button { padding: 10px 20px; font-size: 16px; }
+        .result { margin-top: 20px; }
+        .bar-container { width: 80%; background-color: #ddd; height: 25px; border-radius: 5px; margin-top: 10px; }
+        .bar { height: 100%; text-align: center; line-height: 25px; color: white; border-radius: 5px; }
+        .ai-bar { background-color: #4CAF50; }
+        .human-bar { background-color: #2196F3; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-    <h1>🤖 AI vs Human Text Detector 📝</h1>
-
+    <h1>AI Text Detector 🤖</h1>
     <form method="POST">
-        <textarea name="text" placeholder="Paste text here..."></textarea><br>
+        <input type="text" name="text" placeholder="Paste your text here...">
         <button type="submit">Detect 🔍</button>
     </form>
 
     {% if prediction %}
     <div class="result">
-        <h2>Result: {{ prediction }}</h2>
+        <h2>Prediction: {{ prediction }}</h2>
+
         <div class="bar-container">
-            <div class="bar human" style="width: {{ 100-confidence if prediction=='AI-Generated' else confidence }}%">
-                Human
-            </div>
-            <div class="bar ai" style="width: {{ confidence if prediction=='AI-Generated' else 100-confidence }}%">
-                AI
-            </div>
+            <div class="bar human-bar" style="width: {{ prob_human }}%;">Human: {{ prob_human }}%</div>
         </div>
-        <p>Confidence: {{ confidence }}%</p>
+
+        <div class="bar-container">
+            <div class="bar ai-bar" style="width: {{ prob_ai }}%;">AI: {{ prob_ai }}%</div>
+        </div>
     </div>
     {% endif %}
 </body>
